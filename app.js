@@ -18,6 +18,11 @@ document.addEventListener("DOMContentLoaded", () => {
       square.classList.add(shuffledArray[i]);
       grid.appendChild(square);
       squares.push(square);
+
+      // normal click
+      square.addEventListener("click", function (e) {
+        click(square);
+      });
     }
 
     // add numbers
@@ -65,4 +70,19 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   createBoard();
+
+  // click on square action
+  function click(square) {
+    if (square.classList.contains("bomb")) {
+      console.log("game over");
+    } else {
+      let total = square.getAttribute("data");
+      if (total != 0) {
+        square.classList.add("checked");
+        square.innerHTML = total;
+        return;
+      }
+      square.classList.add("checked");
+    }
+  }
 });
