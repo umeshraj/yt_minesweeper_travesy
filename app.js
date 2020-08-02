@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const width = 10;
   const bombAmount = 20;
+  let flags = 0;
   const squares = [];
   let isGameOver = false;
 
@@ -72,6 +73,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   createBoard();
 
+  // add flag with right click
+  function addFlag() {
+    if (isGameOver) {
+      return;
+    }
+    if (!square.classList.contains("checked") && flags < bombAmount) {
+      if (!square.classList.contains("flag")) {
+        square.classList.add("flag");
+        square.innerHTML = " 🚩";
+        flags++;
+      } else {
+        square.classList.remove("flag");
+        square.innerHTML = "";
+        flags--;
+      }
+    }
+  }
+
   // click on square action
   function click(square) {
     let currentId = square.id;
@@ -84,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
 
     if (square.classList.contains("bomb")) {
-      console.log("game over");
+      gameOver(square);
     } else {
       let total = square.getAttribute("data");
       if (total != 0) {
@@ -152,5 +171,18 @@ document.addEventListener("DOMContentLoaded", () => {
         click(newSquare);
       }
     }, 10);
+  }
+
+  // game over
+  function gameOver(square) {
+    console.log("Game over");
+    isGameOver = true;
+
+    // show all bombs
+    squares.forEach((square) => {
+      if (square.classList.contains("bomb")) {
+        square.innerHTML = "💣";
+      }
+    });
   }
 });
