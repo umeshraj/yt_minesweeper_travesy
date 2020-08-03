@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const width = 10;
-  const bombAmount = 20;
+  const bombAmount = 2;
   let flags = 0;
   const squares = [];
   let isGameOver = false;
@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
       square.addEventListener("click", function (e) {
         click(square);
       });
+
+      // ctrl and left click
+      square.oncontextmenu = function (e) {
+        e.preventDefault();
+        addFlag(square);
+      };
     }
 
     // add numbers
@@ -66,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (i < 89 && squares[i + width].classList.contains("bomb")) total++;
         squares[i].setAttribute("data", total);
 
-        console.log(squares[i]);
+        // console.log(squares[i]);
       }
     }
   }
@@ -74,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   createBoard();
 
   // add flag with right click
-  function addFlag() {
+  function addFlag(square) {
     if (isGameOver) {
       return;
     }
@@ -83,6 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         square.classList.add("flag");
         square.innerHTML = " 🚩";
         flags++;
+        checkForWin();
       } else {
         square.classList.remove("flag");
         square.innerHTML = "";
@@ -184,5 +191,22 @@ document.addEventListener("DOMContentLoaded", () => {
         square.innerHTML = "💣";
       }
     });
+  }
+
+  // check for win
+  function checkForWin() {
+    let matches = 0;
+    for (let i = 0; i < squares.length; i++) {
+      if (
+        squares[i].classList.contains("flag") &&
+        squares[i].classList.contains("bomb")
+      ) {
+        matches++;
+      }
+      if (matches === bombAmount) {
+        console.log("You Won!");
+        isGameOver = true;
+      }
+    }
   }
 });
